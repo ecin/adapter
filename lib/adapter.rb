@@ -1,31 +1,37 @@
+require 'adapter/asserts'
+require 'adapter/exceptions'
+
 module Adapter
-  class IncompleteAPIError < StandardError
-    def initialize(methods)
-      super("Missing methods needed to complete API (#{methods.join(', ')})")
-    end
-  end
+  extend Asserts
 
-  RequiredMethods = [:get, :set, :delete, :clear]
-
-  def self.s
-    @adapters ||= {}
+  def self.definitions
+    @definitions ||= {}
   end
 
   def self.define(name, mod)
     assert_valid_module(mod)
-    s[name.to_sym] = mod
+    definitions[name.to_sym] = mod
+  end
+
+  def self.adapters
+    @adapters ||= {}
+  end
+
+  def self.[](name)
+    assert_valid_adapter(name)
+    adapters[name.to_sym] ||= get_adapter_instance(name)
   end
 
   private
-    def self.assert_valid_module(mod)
-      assert_methods_defined(mod)
-    end
+    def self.get_adapter_instance(name)
+      Class.new do
+        attr_reader :client
 
-    def self.assert_methods_defined(mod)
-      missing_methods = []
-      RequiredMethods.each do |meth|
-        missing_methods << meth unless mod.method_defined?(meth)
+        def initialize(client)
+          @client = client
+        end
+
+        include Adapter.definitions[name.to_sym]
       end
-      raise IncompleteAPIError.new(missing_methods) unless missing_methods.empty?
     end
 end

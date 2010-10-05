@@ -16,7 +16,31 @@ require 'log_buddy'
 logger = Logger.new(log_path.join('test.log'))
 LogBuddy.init(:logger => logger)
 
+module ModuleHelpers
+  def valid_module
+    Module.new do
+      def get(key)
+        client[key]
+      end
+
+      def set(key, value)
+        client[key] = value
+      end
+
+      def delete(key)
+        client.delete(key)
+      end
+
+      def clear
+        client.clear
+      end
+    end
+  end
+end
+
 Spec::Runner.configure do |config|
+  config.include(ModuleHelpers)
+
   config.before(:each) do
 
   end

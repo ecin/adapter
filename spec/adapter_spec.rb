@@ -1,75 +1,64 @@
 require 'helper'
 
 describe Adapter do
-  describe ".adapters" do
+  describe ".definitions" do
     it "defaults to empty hash" do
-      Adapter.s.should == {}
+      Adapter.definitions.should == {}
     end
   end
 
   describe ".define" do
     before do
-      @mod = Module.new do
-        def get(key);         end
-        def set(key, value);  end
-        def delete(key);      end
-        def clear;            end
-      end
+      @mod = valid_module
+    end
+    let(:mod) { @mod }
 
-      Adapter.define(:nothing, @mod)
+    it "adds adapter to definitions" do
+      Adapter.define(:nothing, mod)
+      Adapter.definitions[:nothing].should == @mod
     end
 
-    it "keeps track of adapter" do
-      Adapter.s.keys.should include(:nothing)
-      Adapter.s[:nothing].should == @mod
+    it "symbolizes string adapter names" do
+      Adapter.define('nothing', mod)
+      Adapter.definitions.keys.should include(:nothing)
     end
 
-    it "raises error if get is not defined" do
-      mod = Module.new do
-        def set(key, value);  end
-        def delete(key);      end
-        def clear;            end
-      end
+    [:get, :set, :delete, :clear].each do |method_name|
+      it "raises error if #{method_name} is not defined in module" do
+        mod.send(:undef_method, method_name)
 
+        lambda do
+          Adapter.define(:nothing, mod)
+        end.should raise_error(Adapter::IncompleteAPI, "Missing methods needed to complete API (#{method_name})")
+      end
+    end
+  end
+
+  describe ".[]" do
+    before do
+      Adapter.define(:hash, valid_module)
+    end
+
+    it "returns adapter instance" do
+      adapter = Adapter[:hash].new({})
+      adapter.set('foo', 'bar')
+      adapter.get('foo').should == 'bar'
+      adapter.delete('foo')
+      adapter.get('foo').should be_nil
+
+      adapter.set('foo', 'bar')
+      adapter.clear
+      adapter.get('foo').should be_nil
+    end
+
+    it "raises error for undefined adapter" do
       lambda do
-        Adapter.define(:nothing, mod)
-      end.should raise_error(Adapter::IncompleteAPIError, 'Missing methods needed to complete API (get)')
+        Adapter[:non_existant]
+      end.should raise_error(Adapter::Undefined)
     end
 
-    it "raises error if set is not defined" do
-      mod = Module.new do
-        def get(key);         end
-        def delete(key);      end
-        def clear;            end
-      end
-
-      lambda do
-        Adapter.define(:nothing, mod)
-      end.should raise_error(Adapter::IncompleteAPIError, 'Missing methods needed to complete API (set)')
-    end
-
-    it "raises error if delete is not defined" do
-      mod = Module.new do
-        def get(key);         end
-        def set(key, value);  end
-        def clear;            end
-      end
-
-      lambda do
-        Adapter.define(:nothing, mod)
-      end.should raise_error(Adapter::IncompleteAPIError, 'Missing methods needed to complete API (delete)')
-    end
-
-    it "raises error if clear is not defined" do
-      mod = Module.new do
-        def get(key);         end
-        def set(key, value);  end
-        def delete(key);      end
-      end
-
-      lambda do
-        Adapter.define(:nothing, mod)
-      end.should raise_error(Adapter::IncompleteAPIError, 'Missing methods needed to complete API (clear)')
+    it "memoizes adapter by name" do
+      Adapter[:hash].should equal(Adapter[:hash])
     end
   end
 end

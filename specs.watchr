@@ -28,7 +28,7 @@ def run_spec(path)
   path.gsub!('_spec', '')
   file_name = File.basename(path, '.rb')
   path.gsub!(file_name, file_name + "_spec")
-  run %Q(bundle exec spec #{path})
+  run %Q(bundle exec spec #{path}) if File.exists?(path)
 end
 
 watch('spec/helper\.rb')  {     system('clear'); run('rake') }
