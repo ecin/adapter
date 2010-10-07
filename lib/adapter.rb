@@ -17,14 +17,6 @@ module Adapter
       !read(key).nil?
     end
 
-    def [](key)
-      read(key)
-    end
-
-    def []=(key, value)
-      write(key, value)
-    end
-
     private
       def key_for(key)
         key.is_a?(String) ? key : Marshal.dump(key)
@@ -71,6 +63,12 @@ module Adapter
         end
 
         include Adapter.definitions[name.to_sym]
+
+        alias get read
+        alias set write
+
+        alias []  read
+        alias []= write
       end
     end
 end

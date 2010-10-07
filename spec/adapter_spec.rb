@@ -32,8 +32,6 @@ describe Adapter do
           include Adapter.definitions[:memory]
         end.tap do |klass|
           klass.new.respond_to?(:fetch).should be_true
-          klass.new.respond_to?(:[]).should be_true
-          klass.new.respond_to?(:[]=).should be_true
           klass.new.respond_to?(:key_for, true).should be_true
           klass.new.respond_to?(:serialize, true).should be_true
           klass.new.respond_to?(:deserialize, true).should be_true
@@ -187,10 +185,25 @@ describe Adapter do
       end
     end
 
+    describe "Adapter#get" do
+      it "is aliased to read" do
+        adapter.write('foo', 'bar')
+        adapter.get('foo').should == 'bar'
+      end
+    end
+
     describe "Adapter#[]=" do
       it "is aliased to write" do
         adapter.read('foo').should be_nil
         adapter['foo'] = 'bar'
+        adapter.read('foo').should == 'bar'
+      end
+    end
+
+    describe "Adapter#[]=" do
+      it "is aliased to write" do
+        adapter.read('foo').should be_nil
+        adapter.set('foo', 'bar')
         adapter.read('foo').should == 'bar'
       end
     end
