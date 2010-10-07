@@ -7,11 +7,7 @@ describe Adapter do
     end
   end
 
-  describe ".define with string name" do
-
-  end
-
-  describe ".define with module" do
+  describe ".define" do
     describe "with string name" do
       it "symbolizes string adapter names" do
         Adapter.define('memory', valid_module)
@@ -139,7 +135,7 @@ describe Adapter do
     end
     let(:adapter) { @adapter }
 
-    describe "#fetch" do
+    describe "Adapter#fetch" do
       it "returns value if found" do
         adapter.write('foo', 'bar')
         adapter.fetch('foo', 'baz').should == 'bar'
@@ -173,7 +169,7 @@ describe Adapter do
       end
     end
 
-    describe "#key?" do
+    describe "Adapter#key?" do
       it "returns true if key is set" do
         adapter.write('foo', 'bar')
         adapter.key?('foo').should be_true
@@ -184,14 +180,14 @@ describe Adapter do
       end
     end
 
-    describe "#[]" do
+    describe "Adapter#[]" do
       it "is aliased to read" do
         adapter.write('foo', 'bar')
         adapter['foo'].should == 'bar'
       end
     end
 
-    describe "#[]=" do
+    describe "Adapter#[]=" do
       it "is aliased to write" do
         adapter.read('foo').should be_nil
         adapter['foo'] = 'bar'
