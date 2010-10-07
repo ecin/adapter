@@ -183,5 +183,20 @@ describe Adapter do
         adapter.key?('foo').should be_false
       end
     end
+
+    describe "#[]" do
+      it "is aliased to read" do
+        adapter.write('foo', 'bar')
+        adapter['foo'].should == 'bar'
+      end
+    end
+
+    describe "#[]=" do
+      it "is aliased to write" do
+        adapter.read('foo').should be_nil
+        adapter['foo'] = 'bar'
+        adapter.read('foo').should == 'bar'
+      end
+    end
   end
 end
