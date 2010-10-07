@@ -7,40 +7,98 @@ describe Adapter do
     end
   end
 
-  describe ".define" do
-    before do
-      @mod = valid_module
-    end
-    let(:mod) { @mod }
+  describe ".define with string name" do
 
-    it "adds adapter to definitions" do
-      Adapter.define(:nothing, mod)
-      Adapter.definitions[:nothing].should == @mod
-    end
+  end
 
-    it "symbolizes string adapter names" do
-      Adapter.define('nothing', mod)
-      Adapter.definitions.keys.should include(:nothing)
+  describe ".define with module" do
+    describe "with string name" do
+      it "symbolizes string adapter names" do
+        Adapter.define('memory', valid_module)
+        Adapter.definitions.keys.should include(:memory)
+      end
     end
 
-    [:get, :set, :delete, :clear].each do |method_name|
-      it "raises error if #{method_name} is not defined in module" do
-        mod.send(:undef_method, method_name)
+    describe "with module" do
+      before do
+        @mod = valid_module
+        Adapter.define(:memory, mod)
+      end
+      let(:mod) { @mod }
 
+      it "adds adapter to definitions" do
+        Adapter.definitions.should have_key(:memory)
+        Adapter.definitions[:memory].should be_instance_of(Module)
+      end
+
+      [:get, :set, :delete, :clear].each do |method_name|
+        it "raises error if #{method_name} is not defined in module" do
+          mod.send(:undef_method, method_name)
+
+          lambda do
+            Adapter.define(:memory, mod)
+          end.should raise_error(Adapter::IncompleteAPI, "Missing methods needed to complete API (#{method_name})")
+        end
+      end
+    end
+
+    describe "with block" do
+      before do
+        Adapter.define(:memory) do
+          def get(key)
+            client[key]
+          end
+
+          def set(key, value)
+            client[key] = value
+          end
+
+          def delete(key)
+            client.delete(key)
+          end
+
+          def clear
+            client.clear
+          end
+        end
+      end
+
+      it "adds adapter to definitions" do
+        Adapter.definitions.should have_key(:memory)
+      end
+
+      it "modularizes the block" do
+        Adapter.definitions[:memory].should be_instance_of(Module)
+      end
+    end
+
+    describe "with module and block" do
+      before do
+        Adapter.define(:memory, valid_module) do
+          def clear
+            raise 'Not Implemented'
+          end
+        end
+      end
+
+      it "includes block after module" do
+        adapter = Adapter[:memory].new({})
+        adapter.set('foo', 'bar')
+        adapter.get('foo').should == 'bar'
         lambda do
-          Adapter.define(:nothing, mod)
-        end.should raise_error(Adapter::IncompleteAPI, "Missing methods needed to complete API (#{method_name})")
+          adapter.clear
+        end.should raise_error('Not Implemented')
       end
     end
   end
 
   describe ".[]" do
     before do
-      Adapter.define(:hash, valid_module)
+      Adapter.define(:memory, valid_module)
     end
 
     it "returns adapter instance" do
-      adapter = Adapter[:hash].new({})
+      adapter = Adapter[:memory].new({})
       adapter.set('foo', 'bar')
       adapter.get('foo').should == 'bar'
       adapter.delete('foo')
@@ -58,7 +116,7 @@ describe Adapter do
     end
 
     it "memoizes adapter by name" do
-      Adapter[:hash].should equal(Adapter[:hash])
+      Adapter[:memory].should equal(Adapter[:memory])
     end
   end
 end

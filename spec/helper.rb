@@ -42,6 +42,7 @@ Spec::Runner.configure do |config|
   config.include(ModuleHelpers)
 
   config.before(:each) do
-
+    Adapter.adapters.clear
+    Adapter.definitions.clear
   end
 end

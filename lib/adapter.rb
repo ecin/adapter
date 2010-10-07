@@ -8,9 +8,12 @@ module Adapter
     @definitions ||= {}
   end
 
-  def self.define(name, mod)
-    assert_valid_module(mod)
-    definitions[name.to_sym] = mod
+  def self.define(name, mod=nil, &block)
+    definition_module = Module.new
+    definition_module.send(:include, mod) unless mod.nil?
+    definition_module.send(:include, Module.new(&block)) if block_given?
+    assert_valid_module(definition_module)
+    definitions[name.to_sym] = definition_module
   end
 
   def self.adapters
