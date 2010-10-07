@@ -1,6 +1,6 @@
 module Adapter
   module Asserts
-    RequiredMethods = [:get, :set, :delete, :clear]
+    RequiredMethods = [:read, :write, :delete, :clear]
 
     def assert_valid_module(mod)
       assert_methods_defined(mod)

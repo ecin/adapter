@@ -4,12 +4,48 @@ require 'adapter/exceptions'
 module Adapter
   extend Asserts
 
+  module Defaults
+    def fetch(key, value=nil, &block)
+      read(key) || begin
+        value = yield(key) if value.nil? && block_given?
+        write(key, value)
+        value
+      end
+    end
+
+    def key?(key)
+      !read(key).nil?
+    end
+
+    def [](key)
+      read(key)
+    end
+
+    def []=(key, value)
+      write(key, value)
+    end
+
+    private
+      def key_for(key)
+        key.is_a?(String) ? key : Marshal.dump(key)
+      end
+
+      def serialize(value)
+        Marshal.dump(value)
+      end
+
+      def deserialize(value)
+        value && Marshal.load(value)
+      end
+  end
+
   def self.definitions
     @definitions ||= {}
   end
 
   def self.define(name, mod=nil, &block)
     definition_module = Module.new
+    definition_module.send(:include, Defaults)
     definition_module.send(:include, mod) unless mod.nil?
     definition_module.send(:include, Module.new(&block)) if block_given?
     assert_valid_module(definition_module)

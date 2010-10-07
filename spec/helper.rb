@@ -19,16 +19,16 @@ LogBuddy.init(:logger => logger)
 module ModuleHelpers
   def valid_module
     Module.new do
-      def get(key)
-        client[key]
+      def read(key)
+        deserialize(client[key_for(key)])
       end
 
-      def set(key, value)
-        client[key] = value
+      def write(key, value)
+        client[key_for(key)] = serialize(value)
       end
 
       def delete(key)
-        client.delete(key)
+        client.delete(key_for(key))
       end
 
       def clear

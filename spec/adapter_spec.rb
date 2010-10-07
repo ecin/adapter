@@ -31,7 +31,20 @@ describe Adapter do
         Adapter.definitions[:memory].should be_instance_of(Module)
       end
 
-      [:get, :set, :delete, :clear].each do |method_name|
+      it "includes the defaults" do
+        Class.new do
+          include Adapter.definitions[:memory]
+        end.tap do |klass|
+          klass.new.respond_to?(:fetch).should be_true
+          klass.new.respond_to?(:[]).should be_true
+          klass.new.respond_to?(:[]=).should be_true
+          klass.new.respond_to?(:key_for, true).should be_true
+          klass.new.respond_to?(:serialize, true).should be_true
+          klass.new.respond_to?(:deserialize, true).should be_true
+        end
+      end
+
+      [:read, :write, :delete, :clear].each do |method_name|
         it "raises error if #{method_name} is not defined in module" do
           mod.send(:undef_method, method_name)
 
@@ -45,11 +58,11 @@ describe Adapter do
     describe "with block" do
       before do
         Adapter.define(:memory) do
-          def get(key)
+          def read(key)
             client[key]
           end
 
-          def set(key, value)
+          def write(key, value)
             client[key] = value
           end
 
@@ -83,8 +96,8 @@ describe Adapter do
 
       it "includes block after module" do
         adapter = Adapter[:memory].new({})
-        adapter.set('foo', 'bar')
-        adapter.get('foo').should == 'bar'
+        adapter.write('foo', 'bar')
+        adapter.read('foo').should == 'bar'
         lambda do
           adapter.clear
         end.should raise_error('Not Implemented')
@@ -99,14 +112,13 @@ describe Adapter do
 
     it "returns adapter instance" do
       adapter = Adapter[:memory].new({})
-      adapter.set('foo', 'bar')
-      adapter.get('foo').should == 'bar'
+      adapter.write('foo', 'bar')
+      adapter.read('foo').should == 'bar'
       adapter.delete('foo')
-      adapter.get('foo').should be_nil
-
-      adapter.set('foo', 'bar')
+      adapter.read('foo').should be_nil
+      adapter.write('foo', 'bar')
       adapter.clear
-      adapter.get('foo').should be_nil
+      adapter.read('foo').should be_nil
     end
 
     it "raises error for undefined adapter" do
@@ -117,6 +129,59 @@ describe Adapter do
 
     it "memoizes adapter by name" do
       Adapter[:memory].should equal(Adapter[:memory])
+    end
+  end
+
+  describe "defaults" do
+    before do
+      Adapter.define(:memory, valid_module)
+      @adapter = Adapter[:memory].new({})
+    end
+    let(:adapter) { @adapter }
+
+    describe "#fetch" do
+      it "returns value if found" do
+        adapter.write('foo', 'bar')
+        adapter.fetch('foo', 'baz').should == 'bar'
+      end
+
+      it "returns value if not found" do
+        adapter.fetch('foo', 'baz').should == 'baz'
+      end
+
+      describe "with block" do
+        it "returns value if key found" do
+          adapter.write('foo', 'bar')
+          adapter.should_not_receive(:write)
+          adapter.fetch('foo') do
+            'baz'
+          end.should == 'bar'
+        end
+
+        it "returns result of block if key not found and writes result to key" do
+          adapter.fetch('foo') do
+            'baz'
+          end.should == 'baz'
+          adapter.fetch('foo').should == 'baz'
+        end
+
+        it "yields key to block" do
+          adapter.fetch('foo') do |key|
+            key
+          end.should == 'foo'
+        end
+      end
+    end
+
+    describe "#key?" do
+      it "returns true if key is set" do
+        adapter.write('foo', 'bar')
+        adapter.key?('foo').should be_true
+      end
+
+      it "returns false if key is not set" do
+        adapter.key?('foo').should be_false
+      end
     end
   end
 end
