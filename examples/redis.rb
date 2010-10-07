@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'memcached'
+require 'redis'
 require 'pathname'
 
 root_path = Pathname(__FILE__).dirname.join('..').expand_path
@@ -8,10 +8,9 @@ $:.unshift(lib_path)
 
 require 'adapter'
 
-Adapter.define(:memcached) do
+Adapter.define(:redis) do
   def read(key)
     deserialize(client.get(key_for(key)))
-  rescue Memcached::NotFound
   end
 
   def write(key, value)
@@ -19,16 +18,16 @@ Adapter.define(:memcached) do
   end
 
   def delete(key)
-    client.delete(key_for(key))
+    client.del(key_for(key))
   end
 
   def clear
-    client.flush
+    client.flushdb
   end
 end
 
-client  = Memcached.new('localhost:11211', :namespace => 'adapter_example')
-adapter = Adapter[:memcached].new(client)
+client  = Redis.new
+adapter = Adapter[:redis].new(client)
 adapter.clear
 
 adapter.write('foo', 'bar')
