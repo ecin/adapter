@@ -29,13 +29,17 @@ end
 
 client  = Memcached.new('localhost:11211', :namespace => 'adapter_example')
 adapter = Adapter[:memcached].new(client)
+adapter.clear
 
 adapter.write('foo', 'bar')
-puts adapter.read('foo').inspect
+puts 'Should be bar: ' + adapter.read('foo').inspect
 
 adapter.delete('foo')
-puts adapter.read('foo').inspect
+puts 'Should be nil: ' + adapter.read('foo').inspect
 
 adapter.write('foo', 'bar')
 adapter.clear
-puts adapter.read('foo').inspect
+puts 'Should be nil: ' + adapter.read('foo').inspect
+
+puts 'Should be bar: ' + adapter.fetch('foo', 'bar')
+puts 'Should be bar: ' + adapter.read('foo')
