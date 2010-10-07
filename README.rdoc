@@ -2,7 +2,7 @@
 
 Hash access to anything.
 
-== Implementing an Adapter
+== Defining an Adapter
 
 An adapter requires 4 methods to work: read, write, delete and clear.
 
@@ -32,7 +32,7 @@ Once you have defined an adapter, you can get a class of that adapter like this:
 
 This returns a dynamic class with your adapting methods included and an initialize method that takes a client. This means you can get an instance of the adapter by using new and passing the client (in this instance a boring hash):
 
-    adapter = Adapter[:memory].new({})
+    adapter = Adapter[:memory].new({}) # sets {} to client
     adapter.write('foo', 'bar')
     adapter.read('foo') # 'bar'
     adapter.delete('foo')
