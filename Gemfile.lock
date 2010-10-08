@@ -5,15 +5,19 @@ PATH
 
 GEM
   specs:
+    SystemTimer (1.2)
     log_buddy (0.5.0)
     memcached (1)
+    redis (2.0.10)
     rspec (1.3.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  SystemTimer
   adapter!
   log_buddy
   memcached
+  redis
   rspec (~> 1.3.0)
