@@ -44,13 +44,14 @@ module Adapter
       end
     end
 
-    def serialize(value)
-      value
-    end
+    private
+      def serialize(value)
+        value
+      end
 
-    def deserialize(value)
-      value
-    end
+      def deserialize(value)
+        value
+      end
   end
 end
 
