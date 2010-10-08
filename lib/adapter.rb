@@ -44,6 +44,11 @@ module Adapter
 
         alias []  read
         alias []= write
+
+        def eql?(other)
+          self.class.eql?(other.class) && client == other.client
+        end
+        alias == eql?
       end
     end
 end

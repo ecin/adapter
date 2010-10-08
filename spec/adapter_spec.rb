@@ -129,7 +129,8 @@ describe Adapter do
   describe "defaults" do
     before do
       Adapter.define(:memory, valid_module)
-      @adapter = Adapter[:memory].new({})
+      @client = {}
+      @adapter = Adapter[:memory].new(@client)
     end
     let(:adapter) { @adapter }
 
@@ -205,6 +206,36 @@ describe Adapter do
         adapter.read('foo').should be_nil
         adapter.set('foo', 'bar')
         adapter.read('foo').should == 'bar'
+      end
+    end
+
+    describe "Adapter#eql?" do
+      it "returns true if same name and client" do
+        adapter.should eql(Adapter[:memory].new({}))
+      end
+
+      it "returns false if different name" do
+        Adapter.define(:hash, valid_module)
+        adapter.should_not eql(Adapter[:hash].new({}))
+      end
+
+      it "returns false if different client" do
+        adapter.should_not eql(Adapter[:memory].new(Object.new))
+      end
+    end
+
+    describe "Adapter#==" do
+      it "returns true if same name and client" do
+        adapter.should == Adapter[:memory].new({})
+      end
+
+      it "returns false if different name" do
+        Adapter.define(:hash, valid_module)
+        adapter.should_not == Adapter[:hash].new({})
+      end
+
+      it "returns false if different client" do
+        adapter.should_not == Adapter[:memory].new(Object.new)
       end
     end
   end
