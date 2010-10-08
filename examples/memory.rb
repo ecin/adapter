@@ -5,10 +5,9 @@ root_path = Pathname(__FILE__).dirname.join('..').expand_path
 lib_path  = root_path.join('lib')
 $:.unshift(lib_path)
 
-require 'adapter/riak'
+require 'adapter/memory'
 
-client  = Riak::Client.new['adapter_example']
-adapter = Adapter[:riak].new(client)
+adapter = Adapter[:memory].new({})
 adapter.clear
 
 adapter.write('foo', 'bar')

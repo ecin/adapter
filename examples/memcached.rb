@@ -5,7 +5,6 @@ root_path = Pathname(__FILE__).dirname.join('..').expand_path
 lib_path  = root_path.join('lib')
 $:.unshift(lib_path)
 
-require 'adapter'
 require 'adapter/memcached'
 
 client  = Memcached.new('localhost:11211', :namespace => 'adapter_example')
