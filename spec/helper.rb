@@ -12,7 +12,9 @@ $:.unshift(lib_path)
 require 'spec'
 require 'adapter'
 require 'log_buddy'
+require 'support/an_adapter'
 require 'support/marshal_adapter'
+require 'support/json_adapter'
 
 logger = Logger.new(log_path.join('test.log'))
 LogBuddy.init(:logger => logger)
