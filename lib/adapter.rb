@@ -50,6 +50,8 @@ module Adapter
           self.class.eql?(other.class) && client == other.client
         end
         alias == eql?
+
+        class_eval "def name; :#{name} end"
       end
     end
 end

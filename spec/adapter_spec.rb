@@ -145,7 +145,7 @@ describe Adapter do
     end
   end
 
-  describe "defaults" do
+  describe "Adapter" do
     before do
       Adapter.define(:memory, valid_module)
       @client = {}
@@ -153,7 +153,13 @@ describe Adapter do
     end
     let(:adapter) { @adapter }
 
-    describe "Adapter#fetch" do
+    describe "#name" do
+      it "returns adapter name" do
+        adapter.name.should be(:memory)
+      end
+    end
+
+    describe "#fetch" do
       it "returns value if found" do
         adapter.write('foo', 'bar')
         adapter.fetch('foo', 'baz').should == 'bar'
@@ -187,7 +193,7 @@ describe Adapter do
       end
     end
 
-    describe "Adapter#key?" do
+    describe "#key?" do
       it "returns true if key is set" do
         adapter.write('foo', 'bar')
         adapter.key?('foo').should be_true
@@ -198,21 +204,21 @@ describe Adapter do
       end
     end
 
-    describe "Adapter#[]" do
+    describe "#[]" do
       it "is aliased to read" do
         adapter.write('foo', 'bar')
         adapter['foo'].should == 'bar'
       end
     end
 
-    describe "Adapter#get" do
+    describe "#get" do
       it "is aliased to read" do
         adapter.write('foo', 'bar')
         adapter.get('foo').should == 'bar'
       end
     end
 
-    describe "Adapter#[]=" do
+    describe "#[]=" do
       it "is aliased to write" do
         adapter.read('foo').should be_nil
         adapter['foo'] = 'bar'
@@ -220,7 +226,7 @@ describe Adapter do
       end
     end
 
-    describe "Adapter#[]=" do
+    describe "#[]=" do
       it "is aliased to write" do
         adapter.read('foo').should be_nil
         adapter.set('foo', 'bar')
@@ -228,7 +234,7 @@ describe Adapter do
       end
     end
 
-    describe "Adapter#eql?" do
+    describe "#eql?" do
       it "returns true if same name and client" do
         adapter.should eql(Adapter[:memory].new({}))
       end
@@ -243,7 +249,7 @@ describe Adapter do
       end
     end
 
-    describe "Adapter#==" do
+    describe "#==" do
       it "returns true if same name and client" do
         adapter.should == Adapter[:memory].new({})
       end
