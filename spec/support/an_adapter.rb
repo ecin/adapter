@@ -2,11 +2,6 @@ shared_examples_for "an adapter" do
   let(:adapter) { @adapter }
   let(:client)  { @client }
 
-  Types = {
-    "String" => ["key", "key2"],
-    "Object" => [{:foo => :bar}, {:bar => :baz}]
-  }
-
   before do
     @adapter.clear
   end
@@ -15,7 +10,7 @@ shared_examples_for "an adapter" do
     adapter.client.should == client
   end
 
-  Types.each do |type, (key, key2)|
+  AdapterTestTypes.each do |type, (key, key2)|
     it "reads from keys that are #{type}s like a Hash" do
       adapter[key].should == nil
     end

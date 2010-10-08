@@ -44,3 +44,8 @@ end
 Spec::Runner.configure do |config|
   config.include(ModuleHelpers)
 end
+
+AdapterTestTypes = {
+  "String" => ["key", "key2"],
+  "Object" => [{:foo => :bar}, {:bar => :baz}]
+}
