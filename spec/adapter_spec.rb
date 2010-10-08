@@ -3,6 +3,7 @@ require 'helper'
 describe Adapter do
   describe ".definitions" do
     it "defaults to empty hash" do
+      Adapter.instance_variable_set("@definitions", nil)
       Adapter.definitions.should == {}
     end
   end

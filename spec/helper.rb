@@ -12,6 +12,7 @@ $:.unshift(lib_path)
 require 'spec'
 require 'adapter'
 require 'log_buddy'
+require 'support/marshal_adapter'
 
 logger = Logger.new(log_path.join('test.log'))
 LogBuddy.init(:logger => logger)
@@ -40,9 +41,4 @@ end
 
 Spec::Runner.configure do |config|
   config.include(ModuleHelpers)
-
-  config.before(:each) do
-    Adapter.adapters.clear
-    Adapter.definitions.clear
-  end
 end
