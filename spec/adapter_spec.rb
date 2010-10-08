@@ -99,6 +99,24 @@ describe Adapter do
     end
   end
 
+  describe "Redefining an adapter" do
+    before do
+      Adapter.define(:memory, valid_module)
+      Adapter.define(:hash, valid_module)
+      @memoized_memory = Adapter[:memory]
+      @memoized_hash = Adapter[:hash]
+      Adapter.define(:memory, valid_module)
+    end
+
+    it "unmemoizes adapter by name" do
+      Adapter[:memory].should_not equal(@memoized_memory)
+    end
+
+    it "does not unmemoize other adapters" do
+      Adapter[:hash].should equal(@memoized_hash)
+    end
+  end
+
   describe ".[]" do
     before do
       Adapter.define(:memory, valid_module)

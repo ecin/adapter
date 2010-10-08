@@ -16,6 +16,7 @@ module Adapter
     definition_module.send(:include, mod) unless mod.nil?
     definition_module.send(:include, Module.new(&block)) if block_given?
     assert_valid_module(definition_module)
+    adapters.delete(name.to_sym)
     definitions[name.to_sym] = definition_module
   end
 
