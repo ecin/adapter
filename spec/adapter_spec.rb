@@ -34,8 +34,8 @@ describe Adapter do
         end.tap do |klass|
           klass.new.respond_to?(:fetch).should be_true
           klass.new.respond_to?(:key_for, true).should be_true
-          klass.new.respond_to?(:serialize, true).should be_true
-          klass.new.respond_to?(:deserialize, true).should be_true
+          klass.new.respond_to?(:encode, true).should be_true
+          klass.new.respond_to?(:decode, true).should be_true
         end
       end
 

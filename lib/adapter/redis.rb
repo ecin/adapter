@@ -3,11 +3,11 @@ require 'redis'
 
 Adapter.define(:redis) do
   def read(key)
-    deserialize(client.get(key_for(key)))
+    decode(client.get(key_for(key)))
   end
 
   def write(key, value)
-    client.set(key_for(key), serialize(value))
+    client.set(key_for(key), encode(value))
   end
 
   def delete(key)

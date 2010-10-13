@@ -8,11 +8,11 @@ An adapter requires 4 methods to work: read, write, delete and clear.
 
     Adapter.define(:memory) do
       def read(key)
-        deserialize(client[key_for(key)])
+        decode(client[key_for(key)])
       end
 
       def write(key, value)
-        client[key_for(key)] = serialize(value)
+        client[key_for(key)] = encode(value)
       end
 
       def delete(key)
@@ -24,7 +24,7 @@ An adapter requires 4 methods to work: read, write, delete and clear.
       end
     end
 
-Note: in order for things to be most flexible, always wrap key with key_for(key) which will ensure that pretty much anything can be a key. Also, by default serialize and deserialize are included and they Marshal.dump and Marshal.load. Feel free to override these if you prefer JSON serialization or something else.
+Note: in order for things to be most flexible, always wrap key with key_for(key) which will ensure that pretty much anything can be a key. Also, by default encode and deencode are included and they Marshal.dump and Marshal.load. Feel free to override these if you prefer JSON serialization or something else.
 
 Once you have defined an adapter, you can get a class of that adapter like this:
 

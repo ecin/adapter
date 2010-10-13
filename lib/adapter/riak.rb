@@ -45,11 +45,11 @@ module Adapter
     end
 
     private
-      def serialize(value)
+      def encode(value)
         value
       end
 
-      def deserialize(value)
+      def decode(value)
         value
       end
   end

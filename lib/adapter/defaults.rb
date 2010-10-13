@@ -12,17 +12,22 @@ module Adapter
       !read(key).nil?
     end
 
-    private
-      def key_for(key)
-        key.is_a?(String) ? key : Marshal.dump(key)
+    def key_for(key)
+      if key.is_a?(String)
+        key
+      elsif key.is_a?(Symbol)
+        key.to_s
+      else
+        Marshal.dump(key)
       end
+    end
 
-      def serialize(value)
-        Marshal.dump(value)
-      end
+    def encode(value)
+      Marshal.dump(value)
+    end
 
-      def deserialize(value)
-        value && Marshal.load(value)
-      end
+    def decode(value)
+      value && Marshal.load(value)
+    end
   end
 end

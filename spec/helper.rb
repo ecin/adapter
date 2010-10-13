@@ -23,11 +23,11 @@ module ModuleHelpers
   def valid_module
     Module.new do
       def read(key)
-        deserialize(client[key_for(key)])
+        decode(client[key_for(key)])
       end
 
       def write(key, value)
-        client[key_for(key)] = serialize(value)
+        client[key_for(key)] = encode(value)
       end
 
       def delete(key)
