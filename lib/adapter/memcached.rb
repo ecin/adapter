@@ -21,7 +21,8 @@ module Adapter
       client.flush
     end
 
-    def lock(key, options={}, &block)
+    def lock(name, options={}, &block)
+      key           = name.to_s
       start         = Time.now
       lock_acquired = false
       expiration    = options.fetch(:expiration, 1)
@@ -29,7 +30,7 @@ module Adapter
 
       while (Time.now - start) < timeout
         begin
-          client.add(key.to_s, 'locked', expiration)
+          client.add(key, 'locked', expiration)
           lock_acquired = true
           break
         rescue ::Memcached::NotStored
@@ -37,19 +38,18 @@ module Adapter
         end
       end
 
-      raise(Adapter::LockTimeout.new(key, timeout)) unless lock_acquired
+      raise(Adapter::LockTimeout.new(name, timeout)) unless lock_acquired
 
       begin
         yield
       ensure
-        delete(key.to_s)
+        delete(key)
       end
     end
 
-    private
-      def key_for(key)
-        [super].pack("m").strip
-      end
+    def key_for(key)
+      [super].pack("m").strip
+    end
   end
 end
 

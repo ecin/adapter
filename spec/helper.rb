@@ -11,6 +11,7 @@ $:.unshift(lib_path)
 
 require 'spec'
 require 'adapter'
+require 'timecop'
 require 'log_buddy'
 require 'support/an_adapter'
 require 'support/marshal_adapter'

@@ -5,7 +5,11 @@ describe "Riak adapter" do
   before do
     @client = Riak::Client.new['adapter_spec']
     @adapter = Adapter[:riak].new(@client)
+    @adapter.clear
   end
+
+  let(:adapter) { @adapter }
+  let(:client)  { @client }
 
   it_should_behave_like 'a json adapter'
 

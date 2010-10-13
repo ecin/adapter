@@ -1,11 +1,4 @@
 shared_examples_for "an adapter" do
-  let(:adapter) { @adapter }
-  let(:client)  { @client }
-
-  before do
-    @adapter.clear
-  end
-
   it "can read the client" do
     adapter.client.should == client
   end

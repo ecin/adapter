@@ -5,13 +5,18 @@ describe "Memcached adapter" do
   before do
     @client = Memcached.new('localhost:11211', :namespace => 'adapter_spec')
     @adapter = Adapter[:memcached].new(@client)
+    @adapter.clear
   end
-  let(:lock_key)    { :add_game }
-  let(:lock_value)  { 'locked' }
+
+  let(:adapter) { @adapter }
+  let(:client)  { @client }
 
   it_should_behave_like 'a marshaled adapter'
 
   describe "#lock" do
+    let(:lock_key)    { :add_game }
+    let(:lock_value)  { 'locked' }
+
     it "defaults expiration to 1" do
       client.should_receive(:add).with(lock_key.to_s, lock_value, 1)
       adapter.lock(lock_key) { }
@@ -19,7 +24,7 @@ describe "Memcached adapter" do
 
     it "allows setting expiration" do
       client.should_receive(:add).with(lock_key.to_s, lock_value, 5)
-      adapter.lock(:add_game, :expiration => 5) { }
+      adapter.lock(lock_key, :expiration => 5) { }
     end
 
     describe "with no existing lock" do
