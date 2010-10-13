@@ -14,7 +14,7 @@ describe "Redis adapter" do
   it_should_behave_like 'a marshaled adapter'
 
   describe "#lock" do
-    let(:lock_key)    { :add_game }
+    let(:lock_key) { :add_game }
 
     it "defaults expiration to 1" do
       Timecop.freeze(Time.mktime(2010, 10, 10, 5, 5, 5)) do
