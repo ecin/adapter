@@ -52,4 +52,4 @@ Note: You can also optionally provide a lock method. See the memcached and redis
 
 == Copyright
 
-Copyright (c) 2010 John Nunemaker. See LICENSE for details.
+Copyright (c) 2010 New Toy. See LICENSE for details.
