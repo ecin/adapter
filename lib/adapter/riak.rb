@@ -1,17 +1,9 @@
 require 'adapter'
+require 'adapter/riak/conflict'
 require 'riak'
 
 module Adapter
   module Riak
-    class Conflict < StandardError
-      attr_reader :robject
-
-      def initialize(robject)
-        @robject = robject
-        super('Read conflict present')
-      end
-    end
-
     # Optimize key? to do head request in riak instead of full key read and nil check
     def key?(key)
       client.exists?(key_for(key))
