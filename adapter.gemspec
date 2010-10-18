@@ -4,7 +4,7 @@ require File.expand_path('../lib/adapter/version', __FILE__)
 Gem::Specification.new do |s|
   s.name         = 'adapter'
   s.homepage     = 'http://github.com/jnunemaker/adapter'
-  s.summary      = 'Easily adapt a client to a simple interface.'
+  s.summary      = 'A simple interface to anything'
   s.require_path = 'lib'
   s.authors      = ['John Nunemaker']
   s.email        = ['nunemaker@gmail.com']
