@@ -19,16 +19,18 @@ describe "Redis adapter" do
     let(:lock_key) { :add_game }
 
     it "defaults expiration to 1" do
-      Timecop.freeze(Time.mktime(2010, 10, 10, 5, 5, 5)) do
-        expiration = 1286701506.0 # frozen time + 1
+      now = Time.mktime(2010, 10, 10, 5, 5, 5)
+      Timecop.freeze(now) do
+        expiration = now.to_i + 1
         client.should_receive(:setnx).with(lock_key.to_s, expiration).and_return(true)
         adapter.lock(lock_key) { }
       end
     end
 
     it "allows setting expiration" do
-      Timecop.freeze(Time.mktime(2010, 10, 10, 5, 5, 5)) do
-        expiration = 1286701510.0 # frozen time + 5
+      now = Time.mktime(2010, 10, 10, 5, 5, 5)
+      Timecop.freeze(now) do
+        expiration = now.to_i + 5
         client.should_receive(:setnx).with(lock_key.to_s, expiration).and_return(true)
         adapter.lock(lock_key, :expiration => 5) { }
       end
