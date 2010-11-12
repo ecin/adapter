@@ -3,9 +3,11 @@ require 'adapter/redis'
 
 describe "Redis adapter" do
   before do
-    @client = Redis.new
-    @adapter = Adapter[:redis].new(@client)
-    @adapter.clear
+    handle_failed_connections do
+      @client = Redis.new
+      @adapter = Adapter[:redis].new(@client)
+      @adapter.clear
+    end
   end
 
   let(:adapter) { @adapter }

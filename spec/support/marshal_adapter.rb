@@ -3,8 +3,10 @@ shared_examples_for "a marshaled adapter" do
 
   AdapterTestTypes.each do |type, (key, key2)|
     it "writes Object values to keys that are #{type}s like a Hash" do
-      adapter[key] = {:foo => :bar}
-      adapter[key].should == {:foo => :bar}
+      handle_failed_connections do
+        adapter[key] = {:foo => :bar}
+        adapter[key].should == {:foo => :bar}
+      end
     end
   end
 end

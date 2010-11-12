@@ -3,9 +3,11 @@ require 'adapter/riak'
 
 describe "Riak adapter" do
   before do
-    @client = Riak::Client.new['adapter_spec']
-    @adapter = Adapter[:riak].new(@client)
-    @adapter.clear
+    handle_failed_connections do
+      @client = Riak::Client.new['adapter_spec']
+      @adapter = Adapter[:riak].new(@client)
+      @adapter.clear
+    end
   end
 
   let(:adapter) { @adapter }
@@ -15,24 +17,30 @@ describe "Riak adapter" do
 
   describe "reading key with conflicts" do
     before do
-      client.allow_mult = true
-      other_adapter = Adapter[:riak].new(Riak::Client.new['adapter_spec'])
+      handle_failed_connections do
+        client.allow_mult = true
+        other_adapter = Adapter[:riak].new(Riak::Client.new['adapter_spec'])
 
-      threads = []
-      threads << Thread.new { adapter.write('foo', 'bar') }
-      threads << Thread.new { other_adapter.write('foo', 'baz') }
-      threads.each(&:join)
+        threads = []
+        threads << Thread.new { adapter.write('foo', 'bar') }
+        threads << Thread.new { other_adapter.write('foo', 'baz') }
+        threads.each(&:join)
+      end
     end
 
     it "raises conflict error" do
-      lambda { adapter.read('foo') }.should raise_error(Adapter::Riak::Conflict)
+      handle_failed_connections do
+        lambda { adapter.read('foo') }.should raise_error(Adapter::Riak::Conflict)
+      end
     end
 
     it "exposes robject to exception" do
-      begin
-        adapter.read('foo')
-      rescue Adapter::Riak::Conflict => e
-        e.robject.should be_instance_of(Riak::RObject)
+      handle_failed_connections do
+        begin
+          adapter.read('foo')
+        rescue Adapter::Riak::Conflict => e
+          e.robject.should be_instance_of(Riak::RObject)
+        end
       end
     end
   end

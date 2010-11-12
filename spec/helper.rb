@@ -41,6 +41,16 @@ module ModuleHelpers
       end
     end
   end
+
+  def handle_failed_connections
+    begin
+      yield
+    rescue => e
+      if e.message =~ /connect/i
+        pending
+      end
+    end
+  end
 end
 
 Spec::Runner.configure do |config|

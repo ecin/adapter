@@ -3,9 +3,11 @@ require 'adapter/memcached'
 
 describe "Memcached adapter" do
   before do
-    @client = Memcached.new('localhost:11211', :namespace => 'adapter_spec')
-    @adapter = Adapter[:memcached].new(@client)
-    @adapter.clear
+    handle_failed_connections do
+      @client = Memcached.new('localhost:11211', :namespace => 'adapter_spec')
+      @adapter = Adapter[:memcached].new(@client)
+      @adapter.clear
+    end
   end
 
   let(:adapter) { @adapter }
