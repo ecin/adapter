@@ -36,14 +36,13 @@ module Adapter
       end
     end
 
-    private
-      def encode(value)
-        value
-      end
+    def encode(value)
+      value
+    end
 
-      def decode(value)
-        value
-      end
+    def decode(value)
+      value
+    end
   end
 end
 
