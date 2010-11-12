@@ -180,6 +180,14 @@ describe Adapter do
     end
     let(:adapter) { @adapter }
 
+    describe "#initialize" do
+      it "works with options" do
+        Adapter.define(:memory, valid_module)
+        adapter = Adapter[:memory].new({}, :namespace => 'foo')
+        adapter.options[:namespace].should == 'foo'
+      end
+    end
+
     describe "#name" do
       it "returns adapter name" do
         adapter.name.should be(:memory)

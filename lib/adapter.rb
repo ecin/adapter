@@ -32,10 +32,11 @@ module Adapter
   private
     def self.get_adapter_instance(name)
       Class.new do
-        attr_reader :client
+        attr_reader :client, :options
 
-        def initialize(client)
+        def initialize(client, options={})
           @client = client
+          @options = options
         end
 
         include Adapter.definitions[name.to_sym]
