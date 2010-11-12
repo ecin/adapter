@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'timecop'
   s.add_development_dependency 'memcached'
   s.add_development_dependency 'redis'
+  s.add_development_dependency 'cassandra'
   s.add_development_dependency 'SystemTimer'
   s.add_development_dependency 'riak-client', '~> 0.8'
   s.add_development_dependency 'curb'
