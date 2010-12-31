@@ -43,13 +43,11 @@ module ModuleHelpers
   end
 
   def handle_failed_connections
-    begin
-      yield
-    rescue => e
-      if e.message =~ /connect/i
-        pending
-      end
-    end
+    yield
+  rescue => e
+    puts e.inspect
+    puts e.message unless e.message.nil?
+    pending
   end
 end
 
