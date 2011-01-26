@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.authors      = ['John Nunemaker']
   s.email        = ['nunemaker@gmail.com']
-  s.version      = Adapter::Version
+  s.version      = Adapter::VERSION
   s.platform     = Gem::Platform::RUBY
   s.files        = Dir.glob("{lib,spec}/**/*") + %w[LICENSE Rakefile README.rdoc]
 end
