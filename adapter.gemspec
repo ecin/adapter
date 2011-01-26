@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.homepage     = 'http://github.com/newtoy/adapter'
   s.summary      = 'A simple interface to anything'
   s.require_path = 'lib'
-  s.authors      = ['John Nunemaker']
-  s.email        = ['nunemaker@gmail.com']
+  s.authors      = ['John Nunemaker', 'Geoffrey Dagley', 'Brandon Keepers']
+  s.email        = ['nunemaker@gmail.com', 'gdagley@gmail.com', 'brandon@opensoul.org']
   s.version      = Adapter::VERSION
   s.platform     = Gem::Platform::RUBY
   s.files        = Dir.glob("{lib,spec}/**/*") + %w[LICENSE Rakefile README.rdoc]
