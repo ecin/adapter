@@ -20,5 +20,5 @@ adapter.write('foo', 'bar')
 adapter.clear
 puts 'Should be nil: ' + adapter.read('foo').inspect
 
-puts 'Should be bar: ' + adapter.fetch('foo', 'bar')
-puts 'Should be bar: ' + adapter.read('foo')
+puts 'Should be bar: ' + adapter.fetch('foo', 'bar').inspect
+puts 'Should be bar: ' + adapter.read('foo').inspect
