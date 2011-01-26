@@ -3,7 +3,7 @@ shared_examples_for "an adapter" do
     adapter.client.should == client
   end
 
-  AdapterTestTypes.each do |type, (key, key2)|
+  Adapter::Spec::Types.each do |type, (key, key2)|
     it "reads from keys that are #{type}s like a Hash" do
       handle_failed_connections do
         adapter[key].should == nil

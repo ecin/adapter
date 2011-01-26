@@ -13,9 +13,11 @@ lib_path  = root_path.join('lib')
 log_path  = root_path.join('log')
 log_path.mkpath
 
-require 'support/an_adapter'
-require 'support/marshal_adapter'
-require 'support/json_adapter'
+require 'adapter/spec/an_adapter'
+require 'adapter/spec/marshal_adapter'
+require 'adapter/spec/json_adapter'
+require 'adapter/spec/types'
+
 require 'support/module_helpers'
 
 logger = Logger.new(log_path.join('test.log'))
@@ -24,5 +26,3 @@ LogBuddy.init(:logger => logger)
 Rspec.configure do |c|
   c.include(ModuleHelpers)
 end
-
-AdapterTestTypes = {"String" => ["key", "key2"]}
