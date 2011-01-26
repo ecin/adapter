@@ -1,4 +1,10 @@
-require 'bundler/setup'
+$:.unshift(File.expand_path('../../lib', __FILE__))
+
+require 'rubygems'
+require 'bundler'
+
+Bundler.require(:default, :development)
+
 require 'pathname'
 require 'logger'
 
@@ -7,52 +13,16 @@ lib_path  = root_path.join('lib')
 log_path  = root_path.join('log')
 log_path.mkpath
 
-$:.unshift(lib_path)
-
-require 'spec'
-require 'adapter'
-require 'timecop'
-require 'log_buddy'
-require 'active_support'
 require 'support/an_adapter'
 require 'support/marshal_adapter'
 require 'support/json_adapter'
+require 'support/module_helpers'
 
 logger = Logger.new(log_path.join('test.log'))
 LogBuddy.init(:logger => logger)
 
-module ModuleHelpers
-  def valid_module
-    Module.new do
-      def read(key)
-        decode(client[key_for(key)])
-      end
-
-      def write(key, value)
-        client[key_for(key)] = encode(value)
-      end
-
-      def delete(key)
-        client.delete(key_for(key))
-      end
-
-      def clear
-        client.clear
-      end
-    end
-  end
-
-  def handle_failed_connections
-    yield
-  rescue => e
-    puts e.inspect
-    puts e.message unless e.message.nil?
-    pending
-  end
-end
-
-Spec::Runner.configure do |config|
-  config.include(ModuleHelpers)
+Rspec.configure do |c|
+  c.include(ModuleHelpers)
 end
 
 AdapterTestTypes = {"String" => ["key", "key2"]}

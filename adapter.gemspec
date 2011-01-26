@@ -11,15 +11,4 @@ Gem::Specification.new do |s|
   s.version      = Adapter::Version
   s.platform     = Gem::Platform::RUBY
   s.files        = Dir.glob("{lib,spec}/**/*") + %w[LICENSE Rakefile README.rdoc]
-
-  s.add_development_dependency 'rspec', '~> 1.3.0'
-  s.add_development_dependency 'log_buddy'
-  s.add_development_dependency 'timecop'
-  s.add_development_dependency 'memcached'
-  s.add_development_dependency 'redis'
-  s.add_development_dependency 'cassandra'
-  s.add_development_dependency 'SystemTimer'
-  s.add_development_dependency 'riak-client', '~> 0.8'
-  s.add_development_dependency 'curb'
-  s.add_development_dependency 'activesupport', '~> 3'
 end

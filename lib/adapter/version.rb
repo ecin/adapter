@@ -1,3 +1,3 @@
 module Adapter
-  Version = '0.1'
+  Version = '0.5'
 end

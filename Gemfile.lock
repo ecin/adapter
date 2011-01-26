@@ -1,46 +1,31 @@
 PATH
   remote: .
   specs:
-    adapter (0.1)
+    adapter (0.5)
 
 GEM
   specs:
-    SystemTimer (1.2)
-    activesupport (3.0.0)
-    cassandra (0.8.2)
-      json
-      rake
-      simple_uuid (>= 0.1.0)
-      thrift_client (>= 0.4.0)
-    curb (0.7.8)
-    i18n (0.4.2)
-    json (1.4.6)
+    activesupport (3.0.3)
+    diff-lcs (1.1.2)
+    i18n (0.5.0)
     log_buddy (0.5.0)
-    memcached (1)
-    rake (0.8.7)
-    redis (2.0.11)
-    riak-client (0.8.2)
-      activesupport (>= 2.3.5)
-      i18n (~> 0.4.0)
-    rspec (1.3.0)
-    simple_uuid (0.1.1)
-    thrift (0.2.0.4)
-    thrift_client (0.5.0)
-      thrift (~> 0.2.0)
+    rspec (2.3.0)
+      rspec-core (~> 2.3.0)
+      rspec-expectations (~> 2.3.0)
+      rspec-mocks (~> 2.3.0)
+    rspec-core (2.3.1)
+    rspec-expectations (2.3.0)
+      diff-lcs (~> 1.1.2)
+    rspec-mocks (2.3.0)
     timecop (0.3.5)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  SystemTimer
   activesupport (~> 3)
   adapter!
-  cassandra
-  curb
-  log_buddy
-  memcached
-  redis
-  riak-client (~> 0.8)
-  rspec (~> 1.3.0)
-  timecop
+  i18n (= 0.5.0)
+  log_buddy (~> 0.5.0)
+  rspec (~> 2.3)
+  timecop (~> 0.3.5)
