@@ -53,7 +53,3 @@ Adapters can be defined using a block, a module, or a module and a block. This a
 * Add tests for it. This is important so we don't break it in a future version unintentionally.
 * Commit, do not mess with rakefile, version, or history. (if you want to have your own version, that is fine, but bump version in a commit by itself so we can ignore when we pull)
 * Send us a pull request. Bonus points for topic branches.
-
-== Copyright
-
-Copyright (c) 2010 New Toy. See LICENSE for details.
