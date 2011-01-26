@@ -18,12 +18,4 @@ module ModuleHelpers
       end
     end
   end
-
-  def handle_failed_connections
-    yield
-  rescue => e
-    puts e.inspect
-    puts e.message unless e.message.nil?
-    pending
-  end
 end
