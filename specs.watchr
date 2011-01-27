@@ -32,8 +32,8 @@ def run_spec(path)
 end
 
 watch('spec/helper\.rb')  {     system('clear'); run('rake') }
-watch('lib/.*\.rb')       { |m| system('clear'); run_spec(m[0]) }
-watch('spec/.*_spec\.rb') { |m| system('clear'); run_spec(m[0]) }
+watch('lib/.*\.rb')       { |m| system('clear'); run('rake') }
+watch('spec/.*_spec\.rb') { |m| system('clear'); run('rake') }
 
 # Ctrl-\
 Signal.trap('QUIT') do
