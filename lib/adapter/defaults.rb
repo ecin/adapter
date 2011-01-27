@@ -2,9 +2,8 @@ module Adapter
   module Defaults
     def fetch(key, value=nil, &block)
       read(key) || begin
-        value = yield(key) if value.nil? && block_given?
-        write(key, value)
-        value
+        value = block_given? ? yield(key) : value
+        read(key) || value
       end
     end
 

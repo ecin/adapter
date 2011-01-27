@@ -195,12 +195,12 @@ describe Adapter do
     end
 
     describe "#fetch" do
-      it "returns value if found" do
+      it "returns value if key found" do
         adapter.write('foo', 'bar')
         adapter.fetch('foo', 'baz').should == 'bar'
       end
 
-      it "returns value if not found" do
+      it "returns default value if not key found" do
         adapter.fetch('foo', 'baz').should == 'baz'
       end
 
@@ -213,11 +213,20 @@ describe Adapter do
           end.should == 'bar'
         end
 
-        it "returns result of block if key not found and writes result to key" do
+        it "returns default if key not found" do
+          adapter.fetch('foo', 'default').should == 'default'
+        end
+
+        it "returns result of block if key not found" do
           adapter.fetch('foo') do
             'baz'
           end.should == 'baz'
-          adapter.fetch('foo').should == 'baz'
+        end
+
+        it "returns key if result of block writes key" do
+          adapter.fetch('foo', 'default') do
+            adapter.write('foo', 'write in block')
+          end.should == 'write in block'
         end
 
         it "yields key to block" do
